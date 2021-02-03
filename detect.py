@@ -65,7 +65,7 @@ def detect(original_image, min_score, max_overlap, top_k, suppress=None):
     # Annotate
     annotated_image = original_image
     draw = ImageDraw.Draw(annotated_image)
-    font = ImageFont.truetype("./calibril.ttf", 15)
+    font = ImageFont.truetype("calibril.ttf", 15)
 
     # Suppress specific classes, if needed
     for i in range(det_boxes.size(0)):
@@ -92,12 +92,14 @@ def detect(original_image, min_score, max_overlap, top_k, suppress=None):
         draw.text(xy=text_location, text=det_labels[i].upper(), fill='white',
                   font=font)
     del draw
-
     return annotated_image
+
+import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    img_path = 'a-PyTorch-Tutorial-to-Object-Detection/img/000001.jpg'
-    original_image = Image.open(img_path, mode='r')
-    original_image = original_image.convert('RGB')
-    detect(original_image, min_score=0.2, max_overlap=0.5, top_k=200).show()
+    img_path = 'a-PyTorch-Tutorial-to-Object-Detection/img/000279.jpg'
+    original_image = Image.open(img_path, mode='r')    
+    original_image = original_image.convert('RGB')    
+    annotated_image = detect(original_image, min_score=0.2, max_overlap=0.5, top_k=200)
+    annotated_image.save("annotated.jpeg")
