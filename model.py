@@ -7,7 +7,6 @@ import torchvision
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 class VGGBase(nn.Module):
     """
     VGG base convolutions to produce lower-level feature maps.
@@ -324,7 +323,6 @@ class SSD300(nn.Module):
     """
     The SSD300 network - encapsulates the base VGG network, auxiliary, and prediction convolutions.
     """
-
     def __init__(self, n_classes):
         super(SSD300, self).__init__()
 
@@ -481,7 +479,7 @@ class SSD300(nn.Module):
 
                 # A torch.uint8 (byte) tensor to keep track of which predicted boxes to suppress
                 # 1 implies suppress, 0 implies don't suppress
-                suppress = torch.zeros((n_above_min_score), dtype=torch.uint8).to(device)  # (n_qualified)
+                suppress = torch.zeros((n_above_min_score), dtype=torch.bool).to(device)  # (n_qualified)
 
                 # Consider each box in order of decreasing scores
                 for box in range(class_decoded_locs.size(0)):
@@ -498,9 +496,9 @@ class SSD300(nn.Module):
                     suppress[box] = 0
 
                 # Store only unsuppressed boxes for this class
-                image_boxes.append(class_decoded_locs[1 - suppress])
-                image_labels.append(torch.LongTensor((1 - suppress).sum().item() * [c]).to(device))
-                image_scores.append(class_scores[1 - suppress])
+                image_boxes.append(class_decoded_locs[~suppress])
+                image_labels.append(torch.LongTensor((~suppress).sum().item() * [c]).to(device))
+                image_scores.append(class_scores[~suppress])
 
             # If no object in any class is found, store a placeholder for 'background'
             if len(image_boxes) == 0:
