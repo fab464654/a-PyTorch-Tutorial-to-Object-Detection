@@ -99,7 +99,7 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    img_path = "google_drive/MyDrive/ColabNotebooks/Project/_provaSSD/train/JPEGImages/000279.jpg"
+    img_path = "google_drive/MyDrive/ColabNotebooks/Project/_provaSSD/test/JPEGImages/000279.jpg"
     original_image = Image.open(img_path, mode='r')    
     original_image = original_image.convert('RGB')    
     annotated_image = detect(original_image, min_score=0.2, max_overlap=0.5, top_k=200)
